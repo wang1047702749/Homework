@@ -25,12 +25,12 @@ int main(int argc, char *argv[])
            Values.at(1),Values.at(1),Values.at(2),Values.at(2),Values.at(3),Values.at(3));
     qDebug("最高8位和次高8位最大值：0x%x<%d>",MAX(Values.at(0),Values.at(1)),MAX(Values.at(0),Values.at(1)));
     qDebug("次低8位和最低8位最大值：0x%x<%d>",MIN(Values.at(0),Values.at(1)),MIN(Values.at(2),Values.at(2)));
-                                                    //分别以16进制和10进制输出i的最高8位，次高8位次低8位，最低8位
+                                                    //分别以16进制和10进制输出i的最高8位，次高8位中的最大值与次低8位，最低8位中的最小值
     int _i=(Values.at(2)<<24)+(Values.at(0)<<16)+(Values.at(3)<<8)+Values.at(1);         //重新组合数值
     qDebug("重新组合后数值：0x%x<%d>",_i,_i);         //分别以16进制和10进制输出重组后的i
-    qDebug()<<"排序前："<<Values;                   //输出排序前的Values链表
+    qDebug()<<"排序前："<<Values;                    //输出排序前的Values链表
     std::sort(Values.begin(),Values.end(),[](int x,int y){return x>y;});        //将Values链表按从大到小排序
-    qDebug()<<"排序后："<<Values;                   //输出排序后的Values链表
+    qDebug()<<"排序后："<<Values;                    //输出排序后的Values链表
     return a.exec();
 }
 
