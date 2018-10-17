@@ -48,11 +48,14 @@ typedef struct{
      QStringList list_stud;
 } studData;
 
-//QDebug operator << (QDebug d, const studData &data) {
-//    for(int i=0;i<data.stud.size();i++)
-//        d.noquote().nospace()<<QString(data.stud.at(i))<<"\t" ;
-//    return d;
-//}
+QDebug operator<< (QDebug d, const studData &data) {
+    for(int i=0;i<data.list_stud.size();i++)
+    {
+        d.noquote()<<data.list_stud.at(i);
+    }
+    qDebug()<<"";
+    return d;
+}
 
 //// 比较类，用于std::sort第三个参数
 //class myCmp {
@@ -88,6 +91,7 @@ public:
 private:
     QString datafile;
     QList <studData> stud;
+    QStringList    title;   //数据表头
     // ...
     // 请补全该类，使其实现上述要求
     // ...
@@ -107,12 +111,18 @@ void ScoreSorter::readFile(){
         QTextStream in(&file);               //构建一个QTextStream对象,并将构建该对象的参数指定为之前创建的QFile对象。
         in.setCodec("utf-8");
         qDebug().noquote().nospace()<<"开始读取文件："<<datafile;
-
+        studData eve;
+        QString line1(in.readLine());
+                title = line1.split(" ", QString::SkipEmptyParts);
         while (!in.atEnd()) {
             QString line =in.readLine();
-            QStringList data=line.split("  ", QString::SkipEmptyParts); //保证数据的截取正常
+            eve.list_stud=line.split("  ", QString::SkipEmptyParts); //保证数据的截取正常,去除\n
+//            if((eve.list_stud).last() == "\n") eve.list_stud.removeLast();
+//                   if(eve.list_stud.size()==0) continue;
+                   stud.append(eve);
             QString str(line);
             qDebug()<<str;
+//            qDebug()<<stud.at(0);
 //            stud.append(data);
 //            qDebug()<<data.at(2);
 //            for(auto s:data)
