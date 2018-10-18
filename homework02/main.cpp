@@ -3,10 +3,8 @@
 #include <QTextStream>
 #include <QFile>
 #include <String>
-#include<iostream>
-#include<QDataStream>
 #include <QByteArray>
-
+#include <QDateTime>
 
 
 typedef struct{
@@ -79,6 +77,7 @@ void ScoreSorter::readFile(){
         //保存表头目录
         QString line1(file.readLine());
                 title = line1.split(" ", QString::SkipEmptyParts);
+                if(title.last() == "\n") title.removeLast();
         while (!file.atEnd()) {
             QString line =file.readLine();
             eve.list_stud=line.split("  ", QString::SkipEmptyParts); //保证数据按空格截取正常,去除\n
@@ -87,8 +86,6 @@ void ScoreSorter::readFile(){
             stud.append(eve);
             QString str(line);
             qDebug()<<str;
-//            for(auto s:data)
-//                qDebug().noquote().nospace()<<s;
         }
         file.close();
         qDebug().noquote().nospace()<<"文件读取完成："<<datafile;
@@ -97,15 +94,6 @@ void ScoreSorter::readFile(){
 //对txt文本文件按要求排序并输出到sorted_data.txt文本中
 void ScoreSorter::doSort()
 {
-    QFile file("sorted_"+datafile);
-//    file.open(QIODevice::ReadWrite | QIODevice::Text);
-    if (!file.open(QFile::WriteOnly|QIODevice::Text)){
-      qDebug()<<QString("文件 %1 打开失败").arg(datafile);
-         return ;
-    }
-    qDebug().noquote().nospace()<<"开始写入文件："<<datafile;
-    QTextStream txtout(&file);
-    txtout.setCodec("utf-8");  //采用“utf-8”编码
 //对文本数据逐列排序
     for(int i=1;i<title.size();i++)
     {
@@ -113,51 +101,30 @@ void ScoreSorter::doSort()
         std::sort(stud.begin() , stud.end() , now_Column );
 
         qDebug()<<"排序后输出，当前排序第 "<<i <<" 列：";
-        qDebug()<< title;
+         qDebug() << title;
         for(int i=0;i<stud.size();i++)
         qDebug() <<stud.at(i);
         qDebug()<<"-------------------------------------------------------\n";
-
-
-    for(int j=0;j<title.size();j++)
-        txtout<<title.at(j)<<"\t";
-    txtout<<"\r\n";
-    for(int i=0;i<stud.size();i++)
-    {
-        for(int j=0;j<title.size()-1;j++)
-            txtout<<stud.at(i).list_stud.at(j)<<"\t";
-        txtout<<"\r\n";
     }
-    txtout<<"-------------------------------------------------------------"<<"\r\n";
-    }
-
-    file.close();
-    qDebug().noquote().nospace()<<"文件写入完成："<<datafile;
-    }
+}
 
 
-// 自定义消息处理程序
+// 自定义消息处理程序,重载qDebug（）实现同时输出文件及控制台
 //原文：https://blog.csdn.net/liang19890820/article/details/51838096
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QByteArray localMsg = msg.toLocal8Bit();
-    switch (type) {
-    case QtDebugMsg:
-        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        break;
-    case QtInfoMsg:
-        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        break;
-    case QtWarningMsg:
-        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        break;
-    case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        abort();
-    }
+    QByteArray localMsg = msg.toUtf8();
+
+     // 设置输出信息格式
+        QString strMessage = QString::fromLocal8Bit("%1 ").arg(localMsg.constData());
+    // 输出信息至文件中（读写、追加形式）
+       QFile file("sorted_data.txt");
+       file.open(QIODevice::ReadWrite | QIODevice::Append);
+       QTextStream stream(&file);
+       qDebug().noquote().nospace() << strMessage;
+       stream << strMessage<< "\r\n";
+       file.flush();
+       file.close();
 }
 
 
@@ -177,10 +144,6 @@ int main()
     ScoreSorter s(datafile);
     s.readFile();
     s.doSort();
-    // 打印信息
-    qDebug("This is a debug message.");
-    qWarning("This is a warning message.");
-    qCritical("This is a critical message.");
-    qFatal("This is a fatal message.");
+
     return 0;
 }
