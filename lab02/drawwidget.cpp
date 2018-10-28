@@ -3,6 +3,7 @@
 #include <QPen>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QBuffer>
 
 
 DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
@@ -114,6 +115,13 @@ void DrawWidget::clear ()
   // 清除绘图内容，简单的用背景色填充整个画布即可
   pix->fill(BACKGROUND_COLOR);
   update ();
+}
+
+void DrawWidget::save()
+{
+    //保存图片
+    //把绘图设备中的图片(绘画结果)保存出来
+    this->pix->save("D:/Dev/file/lab02/rc/pixmap.jpg");
 }
 
 
