@@ -36,7 +36,7 @@ private:
    QSpinBox *widthSpinBox;
    QToolButton *colorBtn;
    QToolButton *clearBtn;
-   QToolButton *serveBtn;
+   QToolButton *saveBtn;
 };
 #endif // MAINWINDOW_H
 
