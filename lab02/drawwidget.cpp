@@ -1,6 +1,7 @@
 #include "drawwidget.h"
 #include <QMouseEvent>
 #include <QPen>
+#include <QFileDialog>
 #include <QMessageBox>
 
 
@@ -119,7 +120,9 @@ void DrawWidget::clear ()
 //设置图标居中对齐
 void DrawWidget::photo()
 {
-    pix->load(":/rc/21.png");
+    QString fileName;  //获取文件路径
+    fileName = QFileDialog::getOpenFileName(this,tr("选择图片"), "D:/Dev/file/lab02/rc",tr("Image Files (*.png *.jpg *.bmp)"));
+    pix->load(fileName);
     QPixmap *newPix = new QPixmap(size());
     newPix->fill (BACKGROUND_COLOR);
     QPainter p(newPix);
@@ -270,6 +273,17 @@ void DrawWidget::drawShape(const QPointF ptStart,const QPointF ptEnd,const ST::S
       }
   }
       break;
+  case ST::Diamond:{
+        //菱形的四个顶点
+        QPointF point4((ptStart.x()+ptEnd.x())/2,ptStart.y());
+        QPointF point5(ptStart.x(),(ptStart.y()+ptEnd.y())/2);
+        QPointF point6((ptStart.x()+ptEnd.x())/2,ptEnd.y());
+        QPointF point7(ptEnd.x(),(ptStart.y()+ptEnd.y())/2);
+        QVector<QPointF> pointb;
+        pointb<<point4<<point5<<point6<<point7;
+        painter.drawPolygon(pointb);
+    }
+        break;
   default:
       break;
   }
