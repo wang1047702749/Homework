@@ -90,6 +90,12 @@ void MainWindow::createToolBar ()
    clearBtn->setToolTip(tr("清除当前画板"));
    connect (clearBtn, &QToolButton::clicked, centerFrame, &CenterFrame::clearPaint);
 
+   //保存
+   serveBtn = new QToolButton;
+   serveBtn->setText (tr("保存"));
+   serveBtn->setToolTip(tr("保存当前画板"));
+
+
 //   //图片选择
 //   pixmap.fill (BACKGROUND_COLOR);
 //   QPainter painter(&pixmap);
@@ -110,8 +116,10 @@ void MainWindow::createToolBar ()
   toolBar->addWidget (colorBtn);
   toolBar->addSeparator();
   toolBar->addWidget (clearBtn);
+  toolBar->addWidget(serveBtn);
 //  toolBar->addWidget(imgBtn);
 }
+
 
 void MainWindow::penStyleChangged (int index)
 {
@@ -119,12 +127,12 @@ void MainWindow::penStyleChangged (int index)
   centerFrame->setPenStyle(styleComboBox->currentData().toInt ());
 }
 
+
 void MainWindow::penColorChangged ()
 {
   QColor color = QColorDialog::getColor (static_cast<int>(FOREGROUND_COLOR),
                                          this,
                                          tr("选取画笔颜色"));
-
   //判断颜色是否有效
   if(color.isValid ())
   {
