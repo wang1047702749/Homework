@@ -57,18 +57,23 @@ void CenterFrame::createUserCommandArea()
 
 
 
-   // 菱形按钮
-//   btnDiamond = new QPushButton(group);
-//   btnDiamond->setToolTip("绘制菱形");
-//   btnDiamond->setCheckable(true);
-//   btnDiamond->setIconSize(p.size());
-//   connect(btnDiamond,&QPushButton::clicked,
-//           this,&CenterFrame::on_btnRectClicked);
+//    菱形按钮
+   btnDiamond = new QPushButton(group);
+   btnDiamond->setToolTip("绘制菱形");
+   btnDiamond->setCheckable(true);
+   btnDiamond->setIconSize(p.size());
+   p.fill(BACKGROUND_COLOR);
 
-//   p.fill(BACKGROUND_COLOR);
-//   painter.drawRect(3,3,p.size().width()-2*3,p.size().height()-2*3);
-//   btnDiamond->setIcon (QIcon(p));
-
+   QPointF point4((p.size().width())/2,3);
+   QPointF point5(3,(p.size().height())/2);
+   QPointF point6(p.size().width()/2,p.size().height()-3);
+   QPointF point7(p.size().width()-3,p.size().height()/2);
+   QVector<QPointF> pointb;
+   pointb<<point4<<point5<<point6<<point7;
+   painter.drawPolygon(pointb);
+   btnDiamond->setIcon (QIcon(p));
+   connect(btnDiamond,&QPushButton::clicked,
+           this,&CenterFrame::on_btnDiamondClicked);
 
    // 圆形按钮
    btnEllipse = new QPushButton(group);
@@ -158,8 +163,9 @@ void CenterFrame::createUserCommandArea()
   gridLayout->addWidget(btnEllipse,0,1);
   gridLayout->addWidget(btnTriangle,1,0);
   gridLayout->addWidget(btnLine,1,1);
+  gridLayout->addWidget(btnDiamond,2,0);
   gridLayout->addWidget(btnText,2,1);
-  gridLayout->addWidget(imgBtn,2,0);
+  gridLayout->addWidget(imgBtn,3,0);
   gridLayout->setMargin(3);
   gridLayout->setSpacing(3);
   group->setLayout(gridLayout);
@@ -258,7 +264,7 @@ void CenterFrame::updateButtonStatus()
   }
 }
 
-//背景图
+//放置图片
 void CenterFrame::photoset()
 {
    drawWidget->photo();
@@ -294,6 +300,18 @@ void CenterFrame::on_btnRectClicked()
   if(btnRect->isChecked()){
       updateButtonStatus();
       drawWidget->setShapeType(ST::Rectangle);
+  }else{
+      drawWidget->setShapeType(ST::None);
+  }
+
+}
+
+//菱形对应按键
+void CenterFrame::on_btnDiamondClicked()
+{
+  if(btnDiamond->isChecked()){
+      updateButtonStatus();
+      drawWidget->setShapeType(ST::Diamond);
   }else{
       drawWidget->setShapeType(ST::None);
   }
