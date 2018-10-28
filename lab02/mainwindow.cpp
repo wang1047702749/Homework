@@ -91,9 +91,10 @@ void MainWindow::createToolBar ()
    connect (clearBtn, &QToolButton::clicked, centerFrame, &CenterFrame::clearPaint);
 
    //保存
-   serveBtn = new QToolButton;
-   serveBtn->setText (tr("保存"));
-   serveBtn->setToolTip(tr("保存当前画板"));
+   saveBtn = new QToolButton;
+   saveBtn->setText (tr("保存"));
+   saveBtn->setToolTip(tr("保存当前画板"));
+   connect (saveBtn, &QToolButton::clicked, centerFrame, &CenterFrame::savePaint);
 
 
 //   //图片选择
@@ -116,7 +117,7 @@ void MainWindow::createToolBar ()
   toolBar->addWidget (colorBtn);
   toolBar->addSeparator();
   toolBar->addWidget (clearBtn);
-  toolBar->addWidget(serveBtn);
+  toolBar->addWidget(saveBtn);
 //  toolBar->addWidget(imgBtn);
 }
 
