@@ -40,6 +40,7 @@ public slots:
    void setColor(QColor);
    void clear();
    void photo();
+   void save();
 
 private :
    QPixmap *pix;
