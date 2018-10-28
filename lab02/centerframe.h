@@ -34,6 +34,7 @@ public slots:
    void setPenWidth(int width=1);
    void setPenColor(QColor color);
    void clearPaint();
+   void savePaint();
    void photoset(); //背景图
 
 
